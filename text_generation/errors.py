@@ -78,7 +78,11 @@ def parse_error(status_code: int, payload: Dict[str, str]) -> Exception:
 
     """
     # Try to parse a Text Generation Inference error
-    message = payload["error"]
+    try:
+        message = payload["error"]
+    except KeyError:
+        return UnknownError(str(payload))
+
     if "error_type" in payload:
         error_type = payload["error_type"]
         if error_type == "generation":
